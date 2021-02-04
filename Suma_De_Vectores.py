@@ -10,7 +10,6 @@ for i in range(0,3):
 
 print(y)
 
-
 b=0
 for i in y:
     b = b+i
