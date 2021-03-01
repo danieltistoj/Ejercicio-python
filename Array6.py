@@ -1,5 +1,6 @@
 import numpy as np
 
-x = np.array([1,6,2])
-w = np.array([-3,1,1])
+x1 = np.array([1,-1,1,-2,-1])
+x2 = np.array([0,1,1,1,0])
+
 print(x*w)
