@@ -25,7 +25,7 @@ def funcionCostoAnd(w1,w2):
     matriztoResta = h-y
     matrizPotenciaDos = np.power(matriztoResta,2)
     suma = np.sum(matrizPotenciaDos)
-    resulFinal = suma/2
+    resulFinal = suma/4
     return(resulFinal)
 
 def funcionCostoOr(w1,w2):
@@ -49,7 +49,7 @@ def funcionCostoOr(w1,w2):
     matriztoResta = h - y
     matrizPotenciaDos = np.power(matriztoResta, 2)
     suma = np.sum(matrizPotenciaDos)
-    resulFinal = suma / 2
+    resulFinal = suma / 4
     return (resulFinal)
 
 def funcionCostoXor(w1,w2):
@@ -73,7 +73,7 @@ def funcionCostoXor(w1,w2):
     matriztoResta = h - y
     matrizPotenciaDos = np.power(matriztoResta, 2)
     suma = np.sum(matrizPotenciaDos)
-    resulFinal = suma / 2
+    resulFinal = suma / 4
     return (resulFinal)
 
 
