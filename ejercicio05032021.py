@@ -39,6 +39,7 @@ p1 = np.array([3,1,0]) #patron 1
 print("Patron: ",p1," Pesos: ",w)
 t=0
 e=0
+
 dw = obtenerDiferencial(p1,w,t)
 print("Diferencial: ",dw)#Diferencial de pesos gradiante
 print("Peso final",dw+w)
