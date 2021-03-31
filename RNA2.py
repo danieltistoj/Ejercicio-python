@@ -61,11 +61,7 @@ epocas = np.array([])
 for d in range(0,epoca):
     Egeneral = np.array([]) #Los errores cuadraticos por epoca
     print("---- EPOCA",d+1,"----")
-    p = np.matrix([[1,1,0],
-                  [1,0,1],
-                  [1,1,1],
-                  [1,2,0]]
-                  )
+    p = np.loadtxt('patronesEntrada.txt',dtype=int)
     y = np.matrix([[1,1],
                   [1,0],
                   [0,0],
