@@ -53,7 +53,7 @@ w = np.matrix([[0.5,0.8,-0.5],
                 [0.3,0.4,0.1]]
                 )
 
-epoca = 500
+epoca = 1
 constanteN = 1
 Emedia = np.array([])
 #Emedia2 = np.array([])
@@ -116,8 +116,9 @@ for d in range(0,epoca):
         gradiantes = np.array([])
         cont = 0
         x = 0
+        #Obtener gradiantes de la capa k+1
         for i in range(3,5):
-            gradiante = Gradiante(np.sum(errores),p1[i])
+            gradiante = Gradiante(np.sum(errores),p1[i])#Se manda suma de los erroes
             gradiantes = np.insert(gradiantes,x,gradiante)
             x = x +1
         #for x in range(0,int(row/2)):
@@ -126,6 +127,7 @@ for d in range(0,epoca):
         print("Errores: ",errores)
         #print("Gradiantes: ",gradiantes)
         nuevosPesos = np.matrix(np.empty(shape=(0,3), dtype=float))
+        print("**---* pesos",nuevosPesos)
         x = 2
         j = 0
         a = w.tolist()
@@ -141,6 +143,7 @@ for d in range(0,epoca):
             j = j +1
 
         #print("Pesos corregidos: ",nuevosPesos)
+        print("**---* pesos", nuevosPesos)
 
         gradiantes1 = gradiantes
         pesosAnt = np.matrix(np.empty(shape=(0,3), dtype=float))
