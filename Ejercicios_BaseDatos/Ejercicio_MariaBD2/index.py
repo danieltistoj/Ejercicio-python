@@ -9,27 +9,34 @@ class Cliente:
 
         marco = LabelFrame(self.vetana,text="Cliente")
         #pady significa que tendra 20 espacios arriba y 20 espacios abajo
-        marco.grid(row=0,column=0,columnspan=6,pady=20)
+        marco.grid(row=0,column=0,columnspan=5,pady=20)
 
         Label(marco,text="Nombre").grid(row=0,column=0) #label
-        Entry(marco).grid(row=0,column=1) #area de texto
+        self.nombre = Entry(marco) #area de texto
+        self.nombre.grid(row=0,column=1)
 
         Label(marco, text="Apellido").grid(row=1, column=0)
-        Entry(marco).grid(row=1, column=1)
+        self.apellido = Entry(marco)
+        self.apellido.grid(row=1, column=1)
 
         Label(marco, text="NIT").grid(row=2, column=0)
-        Entry(marco).grid(row=2, column=1)
+        self.nit = Entry(marco)
+        self.nit.grid(row=2, column=1)
 
         Label(marco, text="Telefono").grid(row=3, column=0)
-        Entry(marco).grid(row=3, column=1)
+        self.telefono = Entry(marco)
+        self.telefono.grid(row=3, column=1)
 
         Label(marco, text="Correo").grid(row=4, column=0)
-        Entry(marco).grid(row=4, column=1)
-
+        self.correo = Entry(marco)
+        self.correo.grid(row=4, column=1)
         #boton
         #columspan significa que el boton va a abarcar 2 columnas
         #sticky significa que el boton va a ocupar de este a oeste
-        ttk.Button(marco,text="Guardar",command=self.mostrarDatos).grid(row=4,columnspan=2,sticky=W+E)
+        ttk.Button(marco,text="Guardar",command=self.agregarRegistro).grid(row=5,columnspan=2,sticky=W+E)
+        #Mensaje
+        self.mensaje = Label(text ='',fg='green')
+        self.mensaje.grid(row=3,column=0,columnspan=2,sticky=W+E)
         #Tabla
         #posible error: https://es.stackoverflow.com/questions/345051/error-out-of-range-insertando-una-tabla
         columns = ('#1','#2','#3','#4','#5','#6')
@@ -64,7 +71,8 @@ class Cliente:
                 password="xela2020",
                 host="localhost",
                 port=3305,
-                database="cafeteria_bd"
+                database="cafeteria_bd",
+                autocommit = True
             )
         except mariadb.Error as e:
             print("Error al conectarse a la bd",e)
@@ -79,6 +87,17 @@ class Cliente:
             self.tabla.insert('',cont,text='',value=(id,nombre,apellido,nit,telefono,correo))
             cont+=1
 
+    def agregarRegistro(self):
+        if len(self.nombre.get())!=0 and len(self.apellido.get())!=0:
+            query = "INSERT INTO cliente(Nombre,Apellido,NIT, Telefono,Correo) VALUES('{}','{}','{}','{}','{}');".format(self.nombre.get(),self.apellido.get(),self.nit.get(),self.telefono.get(),self.correo.get())
+            print(query)
+            self.consultaCliente(query)
+            self.mensaje['text'] = "El cliente {} se inserto exitosamente".format(self.nombre.get())
+
+        else:
+            self.mensaje['text'] = "El cliente debe de tener un nombre y un apellido"
+        #actualizar datos
+        self.mostrarDatos()
 
 if __name__=="__main__":
     ventana =  Tk()
