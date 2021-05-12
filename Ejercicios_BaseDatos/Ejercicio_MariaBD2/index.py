@@ -33,7 +33,12 @@ class Cliente:
         #boton
         #columspan significa que el boton va a abarcar 2 columnas
         #sticky significa que el boton va a ocupar de este a oeste
-        ttk.Button(marco,text="Guardar",command=self.agregarRegistro).grid(row=5,columnspan=2,sticky=W+E)
+        self.btnCrear = ttk.Button(marco,text="Guardar",command=self.agregarRegistro)
+        self.btnCrear.grid(row=5,columnspan=2,sticky=W+E)
+
+        self.btnEditar = ttk.Button(marco,text="Editar",command=self.editarRegistro)
+        self.btnEditar.grid(row=6, columnspan=2, sticky=W + E)
+
         #Mensaje
         self.mensaje = Label(text ='',fg='green')
         self.mensaje.grid(row=3,column=0,columnspan=2,sticky=W+E)
@@ -41,8 +46,8 @@ class Cliente:
         #posible error: https://es.stackoverflow.com/questions/345051/error-out-of-range-insertando-una-tabla
         columns = ('#1','#2','#3','#4','#5','#6')
         self.tabla = ttk.Treeview(self.vetana,columns=columns,show='headings')
-
-        self.tabla.grid(row=4,column=0,columnspan=2)
+        self.tabla.bind("<Double-Button-1>",self.doubleClickTable)#que este al pendiente
+        self.tabla.grid(row=7,column=0,columnspan=2)
         #para los encabezados
         self.tabla.heading("#1",text="ID",anchor=CENTER)
         self.tabla.heading("#2",text="Nombre",anchor=CENTER)
@@ -78,6 +83,7 @@ class Cliente:
             print("Error al conectarse a la bd",e)
         cur = conn.cursor()
         cur.execute(query)
+        #por si no se pueden insertar datos: https://stackoverflow.com/questions/41633008/mariadb-cant-insert-data
         return cur
 
     def mostrarDatos(self):
@@ -98,6 +104,35 @@ class Cliente:
             self.mensaje['text'] = "El cliente debe de tener un nombre y un apellido"
         #actualizar datos
         self.mostrarDatos()
+    def editarRegistro(self):
+        if len(self.nombre.get())!=0 and len(self.apellido.get())!=0:
+            query = "UPDATE  cliente SET Nombre = '{}', Apellido='{}',NIT='{}', Telefono='{}',Correo='{}' WHERE idCliente = {}".format(self.nombre.get(),self.apellido.get(),self.nit.get(),self.telefono.get(),self.correo.get(),self.claveVieja)
+            print(query)
+            self.consultaCliente(query)
+            self.mensaje['text'] = "El cliente {} se inserto exitosamente".format(self.nombre.get())
+
+        else:
+            self.mensaje['text'] = "El cliente debe de tener un nombre y un apellido"
+        #actualizar datos
+        self.mostrarDatos()
+        self.btnCrear["state"]="normal"
+        self.btnEditar["state"] = "disable"
+
+    def doubleClickTable(self,event):
+        self.claveVieja = int(self.tabla.item(self.tabla.selection())["values"][0])
+        self.nombre.delete(0,END)
+        self.apellido.delete(0,END)
+        self.nombre.delete(0,END)
+        self.telefono.delete(0,END)
+        self.correo.delete(0,END)
+        self.btnCrear["state"]="disable"
+        self.btnEditar["state"]="normal"
+
+        self.nombre.insert(0,self.tabla.item(self.tabla.selection())["values"][1])
+        self.apellido.insert(0, self.tabla.item(self.tabla.selection())["values"][2])
+        self.nit.insert(0, self.tabla.item(self.tabla.selection())["values"][3])
+        self.telefono.insert(0, self.tabla.item(self.tabla.selection())["values"][4])
+        self.correo.insert(0, self.tabla.item(self.tabla.selection())["values"][5])
 
 if __name__=="__main__":
     ventana =  Tk()
