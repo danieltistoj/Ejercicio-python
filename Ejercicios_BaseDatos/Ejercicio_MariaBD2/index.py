@@ -31,6 +31,15 @@ class Cliente:
         Label(marco, text="Correo").grid(row=4, column=0)
         self.correo = Entry(marco)
         self.correo.grid(row=4, column=1)
+        #buscar cliente entry
+        #Buscar nombre
+        Label(self.vetana, text="Buscar nombre").grid(row=4, column=0)
+        self.buscarNombre = Entry(self.vetana)
+        self.buscarNombre.grid(row=4, column=1)
+        # Buscar nombre
+        Label(self.vetana, text="Buscar NIT").grid(row=5, column=0)
+        self.buscarNIT = Entry(self.vetana)
+        self.buscarNIT.grid(row=5, column=1)
         #boton
         #columspan significa que el boton va a abarcar 2 columnas
         #sticky significa que el boton va a ocupar de este a oeste
@@ -42,6 +51,8 @@ class Cliente:
 
         self.btnBorrar = Button(marco, text="Borrar", command=self.borrarRegistro,bg="red",fg="white")
         self.btnBorrar.grid(row=7, columnspan=2, sticky=W + E)
+
+        Button(self.vetana,text="Buscar cliente",command=self.buscarRegistro,bg='#0C0EE7',fg="white").grid(row=6,column=1)
 
         self.btnBorrar["state"] = "disabled"
         self.btnEditar["state"] = "disabled"
@@ -93,12 +104,16 @@ class Cliente:
         #por si no se pueden insertar datos: https://stackoverflow.com/questions/41633008/mariadb-cant-insert-data
         return cur
 
-    def mostrarDatos(self):
-        consulta = self.consultaCliente("SELECT * FROM cliente")
+    def mostrarDatos(self,where=""):
+        if len(where)>0:
+            consulta = self.consultaCliente("SELECT * FROM cliente "+where)
+        else:
+            consulta = self.consultaCliente("SELECT * FROM cliente")
+
         cont = 0
-        for (id,nombre,apellido,nit,telefono,correo) in consulta:
-            self.tabla.insert('',cont,text='',value=(id,nombre,apellido,nit,telefono,correo))
-            cont+=1
+        for (id, nombre, apellido, nit, telefono, correo) in consulta:
+            self.tabla.insert('', cont, text='', value=(id, nombre, apellido, nit, telefono, correo))
+            cont += 1
 
     def agregarRegistro(self):
         if len(self.nombre.get())!=0 and len(self.apellido.get())!=0:
@@ -162,6 +177,15 @@ class Cliente:
         self.telefono.delete(0, END)
         self.correo.delete(0, END)
         self.mostrarDatos()
+    def buscarRegistro(self):
+        where = "WHERE 1=1"
+        if len(self.buscarNombre.get())>0:
+            where = where + " and Nombre = '{}'".format(self.buscarNombre.get())
+        if len(self.buscarNIT.get())>0:
+            where = where + " and NIT = '{}'".format(self.buscarNIT.get())
+        self.mostrarDatos(where)
+        self.buscarNombre.delete(0, END)
+        self.buscarNIT.delete(0, END)
 
 if __name__=="__main__":
     ventana =  Tk()
