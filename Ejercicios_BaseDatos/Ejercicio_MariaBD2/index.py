@@ -1,5 +1,6 @@
 from tkinter import *
 from tkinter import ttk
+from tkinter import messagebox
 import mariadb
 
 class Cliente:
@@ -33,11 +34,17 @@ class Cliente:
         #boton
         #columspan significa que el boton va a abarcar 2 columnas
         #sticky significa que el boton va a ocupar de este a oeste
-        self.btnCrear = ttk.Button(marco,text="Guardar",command=self.agregarRegistro)
+        self.btnCrear = Button(marco,text="Guardar",command=self.agregarRegistro,bg="green",fg="white")
         self.btnCrear.grid(row=5,columnspan=2,sticky=W+E)
 
-        self.btnEditar = ttk.Button(marco,text="Editar",command=self.editarRegistro)
+        self.btnEditar = Button(marco,text="Editar",command=self.editarRegistro,bg="blue",fg="white")
         self.btnEditar.grid(row=6, columnspan=2, sticky=W + E)
+
+        self.btnBorrar = Button(marco, text="Borrar", command=self.borrarRegistro,bg="red",fg="white")
+        self.btnBorrar.grid(row=7, columnspan=2, sticky=W + E)
+
+        self.btnBorrar["state"] = "disabled"
+        self.btnEditar["state"] = "disabled"
 
         #Mensaje
         self.mensaje = Label(text ='',fg='green')
@@ -109,14 +116,22 @@ class Cliente:
             query = "UPDATE  cliente SET Nombre = '{}', Apellido='{}',NIT='{}', Telefono='{}',Correo='{}' WHERE idCliente = {}".format(self.nombre.get(),self.apellido.get(),self.nit.get(),self.telefono.get(),self.correo.get(),self.claveVieja)
             print(query)
             self.consultaCliente(query)
-            self.mensaje['text'] = "El cliente {} se inserto exitosamente".format(self.nombre.get())
+            self.mensaje['text'] = "El cliente {} se actualizo exitosamente".format(self.nombre.get())
 
         else:
             self.mensaje['text'] = "El cliente debe de tener un nombre y un apellido"
         #actualizar datos
         self.mostrarDatos()
         self.btnCrear["state"]="normal"
-        self.btnEditar["state"] = "disable"
+        self.btnEditar["state"] = "disabled"
+        self.btnBorrar["state"] = "disabled"
+
+        self.nombre.delete(0, END)
+        self.apellido.delete(0, END)
+        self.nit.delete(0, END)
+        self.telefono.delete(0, END)
+        self.correo.delete(0, END)
+
 
     def doubleClickTable(self,event):
         self.claveVieja = int(self.tabla.item(self.tabla.selection())["values"][0])
@@ -125,14 +140,28 @@ class Cliente:
         self.nombre.delete(0,END)
         self.telefono.delete(0,END)
         self.correo.delete(0,END)
-        self.btnCrear["state"]="disable"
+        self.btnCrear["state"]="disabled"
         self.btnEditar["state"]="normal"
+        self.btnBorrar["state"] = "normal"
 
         self.nombre.insert(0,self.tabla.item(self.tabla.selection())["values"][1])
         self.apellido.insert(0, self.tabla.item(self.tabla.selection())["values"][2])
         self.nit.insert(0, self.tabla.item(self.tabla.selection())["values"][3])
         self.telefono.insert(0, self.tabla.item(self.tabla.selection())["values"][4])
         self.correo.insert(0, self.tabla.item(self.tabla.selection())["values"][5])
+    def borrarRegistro(self):
+        if messagebox.askyesno(message="¿Esta seguro de eliminar el registro?",title="Borrar cliente") == True:
+            query = "DELETE FROM cliente where idCliente = {}".format(self.claveVieja)
+            self.consultaCliente(query)
+        self.btnCrear["state"] = "normal"
+        self.btnEditar["state"] = "disabled"
+        self.btnBorrar["state"] = "disabled"
+        self.nombre.delete(0, END)
+        self.apellido.delete(0, END)
+        self.nit.delete(0, END)
+        self.telefono.delete(0, END)
+        self.correo.delete(0, END)
+        self.mostrarDatos()
 
 if __name__=="__main__":
     ventana =  Tk()
