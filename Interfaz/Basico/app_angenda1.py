@@ -2,8 +2,12 @@ from tkinter import *
 from tkinter import messagebox
 from tkinter import ttk
 
+
+contador = 0
+
 def agregarContacto():
     #print(entrada1.get())
+
     if len(entrada1.get())>0 and len(entrada3.get())>0:
         tabla.insert('','end',text='',value=(entrada1.get(),entrada2.get(),entrada3.get(),entrada4.get()))
         entrada1.delete(0,END)
