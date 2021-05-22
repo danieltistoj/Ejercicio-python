@@ -126,6 +126,7 @@ class Cliente:
             self.mensaje['text'] = "El cliente debe de tener un nombre y un apellido"
         #actualizar datos
         self.mostrarDatos()
+
     def editarRegistro(self):
         if len(self.nombre.get())!=0 and len(self.apellido.get())!=0:
             query = "UPDATE  cliente SET Nombre = '{}', Apellido='{}',NIT='{}', Telefono='{}',Correo='{}' WHERE idCliente = {}".format(self.nombre.get(),self.apellido.get(),self.nit.get(),self.telefono.get(),self.correo.get(),self.claveVieja)
@@ -164,6 +165,7 @@ class Cliente:
         self.nit.insert(0, self.tabla.item(self.tabla.selection())["values"][3])
         self.telefono.insert(0, self.tabla.item(self.tabla.selection())["values"][4])
         self.correo.insert(0, self.tabla.item(self.tabla.selection())["values"][5])
+
     def borrarRegistro(self):
         if messagebox.askyesno(message="¿Esta seguro de eliminar el registro?",title="Borrar cliente") == True:
             query = "DELETE FROM cliente where idCliente = {}".format(self.claveVieja)
@@ -177,6 +179,7 @@ class Cliente:
         self.telefono.delete(0, END)
         self.correo.delete(0, END)
         self.mostrarDatos()
+
     def buscarRegistro(self):
         where = "WHERE 1=1"
         if len(self.buscarNombre.get())>0:
@@ -185,7 +188,7 @@ class Cliente:
             where = where + " and NIT = '{}'".format(self.buscarNIT.get())
         self.mostrarDatos(where)
         self.buscarNombre.delete(0, END)
-        self.buscarNIT.delete(0, END)
+
 
 if __name__=="__main__":
     ventana =  Tk()
